@@ -31,3 +31,8 @@ class BrandMixin(ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateMod
     
     def delete(self, request, *args, **kwargs):
         return self.destroy(request, *args, **kwargs)
+    
+    def perform_create(self, serializer):
+        serializer.validated_data["owner"] = self.request.user
+        if serializer.is_valid(raise_exception=True):
+            return serializer.save()
