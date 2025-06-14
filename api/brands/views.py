@@ -1,4 +1,6 @@
 from rest_framework import generics
+from . import permissions
+from rest_framework import authentication
 from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin, RetrieveModelMixin
 
 from .models import Brand
@@ -6,8 +8,15 @@ from brands.serializers import BrandSerializer
 
 
 class BrandMixin(ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin, generics.GenericAPIView):
-    queryset = Brand.objects.all()
+    # queryset = Brand.objects.all()
     serializer_class = BrandSerializer
+    authentication_classes = [authentication.SessionAuthentication]
+    permission_classes = [permissions.IsStaffEditorPermission]
+
+    def get_queryset(self):
+        print(self.request.user)
+        brands = Brand.objects.all()[:2]
+        return brands
 
     def get(self, request, *args, **kwargs):
         if kwargs.get("pk"):
