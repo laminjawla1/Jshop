@@ -1,33 +1,24 @@
-from django.views.decorators.csrf import csrf_exempt
+from rest_framework import generics
+from rest_framework.mixins import ListModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin, RetrieveModelMixin
 
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
-
+from .models import Brand
 from brands.serializers import BrandSerializer
 
-from . import service
 
+class BrandMixin(ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin, generics.GenericAPIView):
+    queryset = Brand.objects.all()
+    serializer_class = BrandSerializer
 
-@csrf_exempt
-@api_view(["GET", "POST"])
-def brands(request):
-    method = request.method
+    def get(self, request, *args, **kwargs):
+        if kwargs.get("pk"):
+            return self.retrieve(request, args, kwargs)
+        return self.list(request, *args, **kwargs)
 
-    if method == "POST":
-        serialized_data = BrandSerializer(data=request.data)
-        if serialized_data.is_valid():
-            return service.add_brand(serialized_data)
-        return Response(serialized_data.errors, status=400)
+    def post(self, request, *args, **kwargs):
+        return self.create(request, *args, **kwargs)
 
-@csrf_exempt
-@api_view(["GET", "PUT", "DELETE"])
-def brand(request, brand_id):
-    method = request.method
-    methods = {
-        "GET": Response(service.get_brand(brand_id))
-    }
-
-    try:
-        return methods.get(method)
-    except Exception as e:
-        return Response({"message": str(e)}, status=404)
+    def put(self, request, *args, **kwargs):
+        return self.update(request, *args, **kwargs)
+    
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)

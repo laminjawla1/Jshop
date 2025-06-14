@@ -3,6 +3,8 @@ from . import views
 
 
 urlpatterns = [
-    path("", views.brands),
-    path("<int:brand_id>", views.brand),
+    # path("", views.BrandListCreateAPIView.as_view()),
+    path("", views.BrandMixin.as_view()),
+    # path("<int:pk>/", views.BrandRetrieveUpdateDestroyAPIView.as_view()),
+    path("<int:pk>/", views.BrandMixin.as_view()),
 ]
