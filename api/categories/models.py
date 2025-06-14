@@ -1,3 +1,12 @@
 from django.db import models
+from utils.base import BaseModel
 
-# Create your models here.
+
+class Category(BaseModel):
+    class Meta:
+        verbose_name_plural = "Categories"
+        ordering = ("name",)
+    name = models.CharField(max_length=32)
+
+    def __str__(self) -> str:
+        return str(self.name)
