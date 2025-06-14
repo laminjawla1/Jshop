@@ -26,7 +26,7 @@ def products(request):
 def get_product(request, product_id):
     if request.method == "GET":
         try:
-            return JsonResponse({"product": service.get_product(product_id)}) 
+            return JsonResponse(service.get_product(product_id), safe=False) 
         except Exception as e:
             return JsonResponse({"message": str(e)}, status=404)
     else:
