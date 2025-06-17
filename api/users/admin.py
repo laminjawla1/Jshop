@@ -17,6 +17,14 @@ class CustomUserAdmin(UserAdmin):
     # Add custom fields to the admin form
     fieldsets = (
         *UserAdmin.fieldsets,  # Retain default UserAdmin fields
+        (
+            'Profile',  # Group name for custom fields
+            {
+                'fields': (
+                    'isVendor',
+                ),
+            },
+        ),
     )
 
 admin.site.register(User, CustomUserAdmin)

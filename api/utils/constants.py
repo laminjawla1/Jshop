@@ -1,0 +1,32 @@
+BG_COLORS = (
+    ("bg-gray-500", "Gray"),
+    ("bg-red-500", "Red"),
+    ("bg-yellow-500", "Yellow"),
+    ("bg-green-500", "Green"),
+    ("bg-blue-500", "Blue"),
+    ("bg-indigo-500", "Indigo"),
+    ("bg-purple-500", "Purple"),
+    ("bg-pink-500", "Pink"),
+)
+
+HOW_DID_YOU_HEAR_CHOICES = [
+    ("google", "Google"),
+    ("facebook", "Facebook"),
+    ("instagram", "Instagram"),
+    ("twitter", "Twitter"),
+    ("linkedin", "LinkedIn"),
+    ("friend", "Friend / Word of Mouth"),
+    ("radio", "Radio"),
+    ("tv", "TV"),
+    ("newspaper", "Newspaper"),
+    ("flyer", "Flyer"),
+    ("jshop_website", "Jshop Website"),
+    ("event", "Event / Seminar"),
+    ("email", "Email Campaign"),
+    ("sms", "SMS"),
+    ("billboard", "Billboard"),
+    ("youtube", "YouTube"),
+    ("tiktok", "TikTok"),
+    ("whatsapp", "WhatsApp"),
+    ("other", "Other"),
+]

@@ -30,7 +30,11 @@ ALLOWED_HOSTS = []
 
 # Application definition
 
-INSTALLED_APPS = [
+SHARED_APPS = [
+    'django_tenants',
+    'users',
+    'core',
+    'phonenumber_field',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,15 +44,27 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
+]
+
+TENANT_APPS = [
     'brands',
     'categories',
     'orders',
     'products',
+    'locations',
     'users',
-    'locations'
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 ]
 
+INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -59,6 +75,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'app.urls'
+PUBLIC_SCHEMA_URLCONF = "core.urls"
 
 TEMPLATES = [
     {
@@ -83,10 +100,19 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django_tenants.postgresql_backend',
+        'NAME': 'jshop',
+        'USER': 'jshop',
+        'PASSWORD': 'jshop',
+        'HOST': 'localhost',
+        'PORT': 5432
     }
 }
+
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
+
 
 
 # Password validation
@@ -131,3 +157,9 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.User'
+
+TENANT_MODEL = "core.Client"
+
+TENANT_DOMAIN_MODEL = "core.Domain"
+
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = True

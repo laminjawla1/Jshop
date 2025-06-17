@@ -6,6 +6,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         apps = [
+                'core',
                 'users',
                 'brands',
                 'categories',
@@ -20,4 +21,4 @@ class Command(BaseCommand):
                 call_command('makemigrations', app)
             except CommandError as e:
                 self.stdout.write(self.style.ERROR(f"❌ Failed on {app}: {e}"))
-        call_command('migrate')
+        # call_command('migrate')

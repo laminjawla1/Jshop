@@ -1,6 +1,5 @@
 from django.db import models
 from utils.base import BaseModel
-from users.models import User
 from categories.models import Category
 from brands.models import Brand
 from locations.models import Location
@@ -25,7 +24,6 @@ class Product(BaseModel):
     categories = models.ManyToManyField(Category, related_name="products")
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, related_name="products")
     description = models.TextField(blank=True, null=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="products")
     location = models.ForeignKey(Location, on_delete=models.SET_NULL, null=True)
 
     def serialize(self):
