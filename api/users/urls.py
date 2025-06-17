@@ -5,5 +5,5 @@ from . import views
 
 urlpatterns = [
     path("", views.UserListCreateAPIView.as_view()),
-    path("auth/", obtain_auth_token),
+    path("login/", obtain_auth_token),
 ]

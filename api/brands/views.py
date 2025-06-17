@@ -5,13 +5,14 @@ from users import authentication
 from .models import Brand
 from rest_framework import permissions
 from brands.serializers import BrandSerializer
+from django_tenants.utils import schema_context
 
 
 class BrandListCreateAPIView(generics.ListCreateAPIView):
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
     authentication_classes = [authentication.TokenAuthentication]
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class BrandMixin(ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, DestroyModelMixin, generics.GenericAPIView):
@@ -41,3 +42,4 @@ class BrandMixin(ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateMod
         serializer.validated_data["owner"] = self.request.user
         if serializer.is_valid(raise_exception=True):
             return serializer.save()
+

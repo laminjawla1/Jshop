@@ -59,6 +59,7 @@ TENANT_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework.authtoken',
 ]
 
 INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
@@ -163,3 +164,6 @@ TENANT_MODEL = "core.Client"
 TENANT_DOMAIN_MODEL = "core.Domain"
 
 SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
+
+BASE_URL = "localhost"
+PORT = ":8000"

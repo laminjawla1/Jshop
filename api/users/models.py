@@ -1,9 +1,9 @@
-from utils.base import BaseModel
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from phonenumber_field.modelfields import (
     PhoneNumberField,
 )
+from core.models import Client
 
 
 class User(AbstractUser):

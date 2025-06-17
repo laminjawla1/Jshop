@@ -2,9 +2,9 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path('brands/', include('brands.urls')),
-    path('categories/', include('categories.urls')),
-    path('orders/', include('orders.urls')),
-    path('products/', include('products.urls')),
-    path('users/', include('users.urls')),
+    path('api/brands/', include('brands.urls')),
+    path('api/categories/', include('categories.urls')),
+    path('api/orders/', include('orders.urls')),
+    path('api/products/', include('products.urls')),
+    path('api/users/', include('users.urls')),
 ]
