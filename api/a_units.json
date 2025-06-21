@@ -1,0 +1,21 @@
+[
+  { "name": "Piece", "symbol": "pc" },
+  { "name": "Box", "symbol": "box" },
+  { "name": "Pack", "symbol": "pack" },
+  { "name": "Pair", "symbol": "pair" },
+  { "name": "Bag", "symbol": "bag" },
+  { "name": "Centimeter", "symbol": "cm" },
+  { "name": "Feet", "symbol": "ft" },
+  { "name": "Gram", "symbol": "g" },
+  { "name": "Inch", "symbol": "in" },
+  { "name": "Kilogram", "symbol": "kg" },
+  { "name": "Kilometer", "symbol": "km" },
+  { "name": "Pound", "symbol": "lb" },
+  { "name": "Milligram", "symbol": "mg" },
+  { "name": "Yard", "symbol": "yard" },
+  { "name": "Portion", "symbol": "portion" },
+  { "name": "Bowl", "symbol": "bowl" },
+  { "name": "Bottle", "symbol": "bottle" },
+  { "name": "Plate", "symbol": "plate" },
+  { "name": "Carton", "symbol": "carton" }
+]

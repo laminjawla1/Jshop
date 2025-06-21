@@ -14,10 +14,13 @@ class Client(TenantMixin, BaseModel):
         return self.name 
 
 
-class Domain(DomainMixin):
+class Domain(DomainMixin, BaseModel):
     pass
 
-class TenantUserRegistry(models.Model):
+
+class TenantUserRegistry(BaseModel):
+    class Meta:
+        ordering = ("tenant",)
+        verbose_name_plural = "Tenant User Registries"
     email = models.EmailField(unique=True)
     tenant = models.ForeignKey(Client, on_delete=models.CASCADE)
-    created_at = models.DateTimeField(auto_now_add=True)

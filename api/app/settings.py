@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -34,6 +35,8 @@ SHARED_APPS = [
     'django_tenants',
     'users',
     'core',
+    'units',
+    'currencies',
     'phonenumber_field',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -53,6 +56,7 @@ TENANT_APPS = [
     'products',
     'locations',
     'users',
+    'settings',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -167,3 +171,16 @@ SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
 
 BASE_URL = "localhost"
 PORT = ":8000"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MULTITENANT_RELATIVE_MEDIA_ROOT = "tenants/%s"
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django_tenants.files.storage.TenantFileSystemStorage"
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"
+    }
+}

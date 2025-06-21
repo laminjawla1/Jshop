@@ -1,0 +1,17 @@
+[
+  {
+    "code": "GMD",
+    "name": "Gambian Dalasi",
+    "symbol": "D"
+  },
+  {
+    "code": "EUR",
+    "name": "Euro",
+    "symbol": "€"
+  },
+  {
+    "code": "USD",
+    "name": "United States Dollar",
+    "symbol": "$"
+  }
+]

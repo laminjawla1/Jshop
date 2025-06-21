@@ -3,7 +3,6 @@ from django.db import models
 from phonenumber_field.modelfields import (
     PhoneNumberField,
 )
-from core.models import Client
 
 
 class User(AbstractUser):
@@ -12,7 +11,7 @@ class User(AbstractUser):
     
     email = models.EmailField(unique=True)
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['first_name', 'last_name']
+    REQUIRED_FIELDS = ['first_name', 'last_name', 'username']
 
 
     country = models.CharField(max_length=100)

@@ -11,8 +11,11 @@ class Command(BaseCommand):
                 'brands',
                 'categories',
                 'locations',
+                'units',
                 'products',
                 'orders',
+                'currencies',
+                'settings',
             ]
 
         for app in apps:

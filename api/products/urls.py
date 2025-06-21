@@ -3,6 +3,6 @@ from .import views
 
 
 urlpatterns = [
-    path("", views.products),
-    path("<int:product_id>/", views.get_product)
+    path("", views.ProductMixin.as_view()),
+    path("<int:product_id>/", views.ProductMixin.as_view())
 ]

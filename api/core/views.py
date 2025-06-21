@@ -1,58 +1,54 @@
-from rest_framework.generics import CreateAPIView
-from .models import Client, Domain
-from .serializers import TenantSignupSerializer
-from rest_framework.exceptions import ValidationError
-from django.db import IntegrityError
-from users.models import User
-from rest_framework.response import Response
-from rest_framework import status
-from django.core.management import call_command
 from django.conf import settings
+from django.db import IntegrityError
+from django.contrib.auth import authenticate
 from django_tenants.utils import schema_context
 
+from rest_framework import status
 from rest_framework.views import APIView
-from django.contrib.auth import authenticate
+from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from .models import TenantUserRegistry
+from rest_framework.generics import CreateAPIView
+from rest_framework.exceptions import ValidationError
+
+from users.models import User
+from settings.models import Setting
+from locations.models import Location
+from currencies.models import Currency
+
+from core.models import Client, Domain
+from core.models import TenantUserRegistry
+from core.serializers import TenantSignupSerializer
+
 
 class ClientCreateAPIView(CreateAPIView):
     serializer_class = TenantSignupSerializer
 
     def perform_create(self, serializer):
-        try:
-            data = serializer.validated_data
+        data = serializer.validated_data
 
-            # 1. Sterilize the schema from the domain name
-            schema_name = data['domain_name'].lower().replace(" ", "")
-            domain_prefix = schema_name
+        # Check if this domain name already exists
+        if Client.objects.filter(schema_name=data['subdomain']).exists():
+            raise ValidationError({"error": "A business with this domain name already exists."})
 
-            # 2. Check if this domain name already exists
-            if Client.objects.filter(schema_name=schema_name).exists():
-                raise ValidationError({"error": "A business with this domain name already exists."})
+        # Create the tenant
+        tenant = Client(
+            schema_name=data["subdomain"],
+            name=data["business_name"],
+            email=data["email"]
+        )
+        tenant.save()
 
-            # 3. Check if this user already exists
-            if User.objects.filter(email=data["email"]).exists():
-                raise ValidationError({"error": "A user with this email already exists."})
+        # Create its domain (e.g., jawlacosmetics.localhost)
+        Domain.objects.create(
+            domain=f"{data['subdomain']}.{settings.BASE_URL}",
+            tenant=tenant,
+            is_primary=True
+        )
 
-            # 4. Create the tenant
-            tenant = Client(
-                schema_name=data["domain_name"],
-                name=data["business_name"],
-                email=data["email"]
-            )
-            tenant.save()
-            call_command("migrate_schemas", schema_name=tenant.schema_name)
-
-            # 5. Create its domain (e.g., jawlacosmetics.localhost)
-            Domain.objects.create(
-                domain=f"{domain_prefix}.{settings.BASE_URL}",
-                tenant=tenant,
-                is_primary=True
-            )
-
-            # 6. Create a user
-            with schema_context(tenant.schema_name):
-                User.objects.create_user(
+        # Create some default settings for the tenant
+        with schema_context(tenant.schema_name):
+            try:
+                User.objects.create_superuser(
                     first_name=data["first_name"],
                     last_name=data["last_name"],
                     email=data["email"],
@@ -60,21 +56,29 @@ class ClientCreateAPIView(CreateAPIView):
                     phone_number=data["phone_number"],
                     password=data["password"],
                 )
+            except IntegrityError:
+                raise ValidationError({"error": "A user with this email already exists."})
             
-            TenantUserRegistry.objects.create(email=data["email"], tenant=tenant)
+            # Create a default location
+            Location.objects.create(name="Head Office")
 
-            return tenant
-        except IntegrityError as e:
-            raise ValidationError({"error": "A business with this domain name already exists."})
+            # Settings
+            default_currency = Currency.objects.first()
+            Setting.objects.create(default_currency=default_currency)
+
+        # Register a tenant
+        TenantUserRegistry.objects.create(email=data["email"], tenant=tenant)
+
+        return tenant
         
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        tenant = self.perform_create(serializer)
+        self.perform_create(serializer)
+
         return Response({
-            "message": "Tenant and user created successfully.",
-            "tenant": tenant.name,
+            "message": "Business profile and admin user created successfully.",
             "login_url": f"http://{settings.BASE_URL}{settings.PORT}/api/users/login"
         }, status=status.HTTP_201_CREATED)
     
